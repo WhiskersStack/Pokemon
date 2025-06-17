@@ -1,0 +1,5 @@
+__pycache__/
+venv/
+.vscode/
+MyKeyPair.pem
+public_ip.txt
