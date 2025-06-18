@@ -24,8 +24,8 @@ def run_main_script(venv_dir="venv", entry="ec2_init.py"):
 
 
 def main():
-    create_venv()
-    install_requirements()
+    # create_venv()
+    # install_requirements()
     run_main_script()
     print("\nAll done!")
 
