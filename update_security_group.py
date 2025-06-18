@@ -24,5 +24,5 @@ def update_security_group(ec2, security_group_id):
         print("\n\n\n ************************* \n\n\n")
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # update_security_group(boto3.client("ec2", region_name="us-west-2"))
