@@ -13,7 +13,7 @@ def launch_ec2_instance(ec2):
 
     user_data_script = """#!/bin/bash
     cd /home/ubuntu
-    git clone https://github.com/WhiskersStack/PokemonGameV2.git
+    git clone https://github.com/WhiskersStack/PokemonWithDynamoDB.git
     chown -R ubuntu:ubuntu /home/ubuntu/PokemonGameV2
     echo 'if [ -n "$SSH_CONNECTION" ]; then cd ~/PokemonGameV2 && python3 main.py; fi' >> /home/ubuntu/.bashrc
     """
