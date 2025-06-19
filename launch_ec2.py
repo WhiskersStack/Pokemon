@@ -33,7 +33,7 @@ def launch_ec2_instance(ec2):
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "PokemonGame2",
+                        "Value": "PokemonGame4", # Should match IAM role instance configuration
                     }
                 ]
             }

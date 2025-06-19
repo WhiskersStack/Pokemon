@@ -14,7 +14,7 @@ resp = ec2.describe_instances(
         {"Name": "instance-state-name",
             "Values": ["running"]},     # only running
         # optional: by tag
-        {"Name": "tag:Name", "Values": ["PokemonGame"]},
+        {"Name": "tag:Name", "Values": ["PokemonGame4"]},
     ]
 )
 
