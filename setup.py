@@ -31,12 +31,19 @@ def run_iam_script(venv_dir="venv", entry="iam.py"):
     )
     subprocess.check_call([python_path, entry])
 
+def run_dynamodb_script(venv_dir="venv", entry="dynamoDB.py"):
+    print("Running DynamoDB script...")
+    python_path = os.path.join(
+        venv_dir, "Scripts" if os.name == "nt" else "bin", "python"
+    )
+    subprocess.check_call([python_path, entry])
 
 def main():
     # create_venv()
     # install_requirements()
     run_main_script()
     run_iam_script()
+    run_dynamodb_script()
     print("\nAll done!")
 
 
