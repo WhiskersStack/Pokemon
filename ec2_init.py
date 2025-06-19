@@ -22,6 +22,7 @@ def main():
     # Get the public IP address of the instance
     get_public_ip(ec2, ids[0])
 
+
 if __name__ == "__main__":
     main()
 

@@ -2,11 +2,32 @@
 import boto3
 import botocore
 
-INSTANCE_ID = "i-07e6e6af87c226c4f"
+
 PROFILE_NAME = "LabInstanceProfile"
 REGION = "us-west-2"
 
 ec2 = boto3.client("ec2", region_name=REGION)
+
+# 2. Ask AWS for instances that match your filters
+resp = ec2.describe_instances(
+    Filters=[
+        {"Name": "instance-state-name",
+            "Values": ["running"]},     # only running
+        # optional: by tag
+        {"Name": "tag:Name", "Values": ["PokemonGame"]},
+    ]
+)
+
+# 3. Walk the nested response and collect IDs
+instance_ids = [
+    inst["InstanceId"]
+    for reservation in resp["Reservations"]
+    for inst in reservation["Instances"]
+]
+
+print(instance_ids)   # ['i-0ab12c34de56f7890', ...]
+
+INSTANCE_ID = instance_ids[0] if instance_ids else None
 
 assocs = ec2.describe_iam_instance_profile_associations(
     Filters=[{"Name": "instance-id", "Values": [INSTANCE_ID]}]
