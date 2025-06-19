@@ -2,6 +2,11 @@ import boto3
 import os
 import json
 from botocore.exceptions import ClientError
+import itertools
+import sys
+import threading
+import time
+
 
 def launch_ec2_instance(ec2):
     # Launch EC2 instance
@@ -37,6 +42,30 @@ def launch_ec2_instance(ec2):
 
     # Print instance security group ID
     instance_id = response["Instances"][0]["InstanceId"]
+
+    #####################################################
+
+    INSTANCE_ID = instance_id
+
+    def spin(stop):                    # simple console spinner
+        for c in itertools.cycle("|/-\\"):
+            if stop.is_set(): break
+            sys.stdout.write(f"\rWaiting for EC2 instance {INSTANCE_ID} to start... {c}")
+            sys.stdout.flush()
+            time.sleep(0.2)
+        sys.stdout.write("\r")         # clean line
+
+    stop = threading.Event()
+    threading.Thread(target=spin, args=(stop,), daemon=True).start()
+
+    ec2.get_waiter("instance_running").wait(InstanceIds=[INSTANCE_ID])  # blocks
+
+    stop.set()                        # stop spinner
+    print(f"{INSTANCE_ID} is now running!")
+
+
+    #####################################################
+
     print(f"Instance ID: {instance_id}")
     print(f"Security Group ID: {response['Instances'][0]['SecurityGroups'][0]['GroupId']}")
     security_group_id = response["Instances"][0]["SecurityGroups"][0]["GroupId"]
