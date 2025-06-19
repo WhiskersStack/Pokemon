@@ -14,8 +14,8 @@ def launch_ec2_instance(ec2):
     user_data_script = """#!/bin/bash
     cd /home/ubuntu
     git clone https://github.com/WhiskersStack/PokemonWithDynamoDB.git
-    chown -R ubuntu:ubuntu /home/ubuntu/PokemonGameV2
-    echo 'if [ -n "$SSH_CONNECTION" ]; then cd ~/PokemonGameV2 && python3 main.py; fi' >> /home/ubuntu/.bashrc
+    chown -R ubuntu:ubuntu /home/ubuntu/PokemonWithDynamoDB
+    echo 'if [ -n "$SSH_CONNECTION" ]; then cd ~/PokemonWithDynamoDB && python3 main.py; fi' >> /home/ubuntu/.bashrc
     """
     # echo 'if [ -n "$SSH_CONNECTION" ]; then python3 ~/PokemonGameV2/main.py; fi' >> ~/.bashrc
 
@@ -49,8 +49,10 @@ def launch_ec2_instance(ec2):
 
     def spin(stop):                    # simple console spinner
         for c in itertools.cycle("|/-\\"):
-            if stop.is_set(): break
-            sys.stdout.write(f"\rWaiting for EC2 instance {INSTANCE_ID} to start... {c}")
+            if stop.is_set():
+                break
+            sys.stdout.write(
+                f"\rWaiting for EC2 instance {INSTANCE_ID} to start... {c}")
             sys.stdout.flush()
             time.sleep(0.2)
         sys.stdout.write("\r")         # clean line
@@ -58,21 +60,23 @@ def launch_ec2_instance(ec2):
     stop = threading.Event()
     threading.Thread(target=spin, args=(stop,), daemon=True).start()
 
-    ec2.get_waiter("instance_running").wait(InstanceIds=[INSTANCE_ID])  # blocks
+    ec2.get_waiter("instance_running").wait(
+        InstanceIds=[INSTANCE_ID])  # blocks
 
     stop.set()                        # stop spinner
     print(f"{INSTANCE_ID} is now running!")
 
-
     #####################################################
 
     print(f"Instance ID: {instance_id}")
-    print(f"Security Group ID: {response['Instances'][0]['SecurityGroups'][0]['GroupId']}")
+    print(
+        f"Security Group ID: {response['Instances'][0]['SecurityGroups'][0]['GroupId']}")
     security_group_id = response["Instances"][0]["SecurityGroups"][0]["GroupId"]
 
     ids = [instance_id, security_group_id]
 
     return ids
+
 
 if __name__ == "__main__":
     launch_ec2_instance(boto3.client("ec2", region_name="us-west-2"))
